@@ -25,6 +25,17 @@ type Props = {
 
 type State = { selectedItemPosition: number }
 
+type ItemProps = {
+  label?: string,
+  value?: string | number,
+}
+
+class WheelPickerItem extends React.Component<ItemProps> {
+  render() {
+    return null
+  }
+}
+
 export default class WheelPicker extends React.Component<Props, State> {
 
   state = {
@@ -35,8 +46,10 @@ export default class WheelPicker extends React.Component<Props, State> {
     isAtmospheric: true,
     isCurved: true,
     itemSpace: 20,
-    style: { height: 150, width: 200 },
+    style: { height: 75, width: 100 },
   }
+
+  static Item = WheelPickerItem
 
   onItemSelected = (item: string | number) => {
     if (this.props.onItemSelected) {
