@@ -141,7 +141,7 @@ public class WheelPickerManager extends SimpleViewManager<WheelPicker> implement
     }
 
     @ReactProp(name = "itemTextFontFamily")
-    public void setSelectedItemPosition(WheelPicker wheelPicker, String itemTextFontFamily) {
+    public void setItemTextFontFamily(WheelPicker wheelPicker, String itemTextFontFamily) {
       if (wheelPicker != null){
         Typeface typeface = ReactFontManager.getInstance().getTypeface(
             itemTextFontFamily,
