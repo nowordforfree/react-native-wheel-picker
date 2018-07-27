@@ -3,25 +3,10 @@ declare module "react-native-wheel-picker" {
   import { StyleProp, TextStyle, ViewStyle } from "react-native"
 
   export interface WheelPickerProps {
-    curtainColor?: string,
-    data?: Array<string | number>,
-    indicatorColor?: string,
-    indicatorSize?: number,
-    isAtmospheric?: boolean,
-    isCurtain?: boolean,
-    isCurved?: boolean,
-    isCyclic?: boolean,
-    itemSpace?: number,
     itemStyle?: StyleProp<TextStyle>,
-    itemTextColor?: string,
-    itemTextFontFamily?: string,
-    itemTextSize?: number,
-    onItemSelected?: (arg: string | number) => void,
-    renderIndicator?: boolean,
-    selectedItemPosition?: number,
-    selectedItemTextColor?: string,
+    onValueChange?: (arg: string | number) => void,
+    selectedValue?: string | number,
     style?: StyleProp<ViewStyle>,
-    visibleItemCount?: number,
   }
 
   export type State = {
