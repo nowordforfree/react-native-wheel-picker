@@ -4,10 +4,10 @@ import { requireNativeComponent } from 'react-native';
 const WheelPickerNative = requireNativeComponent('WheelPicker', WheelPicker);
 
 type Props = {
-  backgroundColor?: string,
   curtainColor?: string,
   data: Array<string | number>,
   indicatorColor?: string,
+  indicatorSize?: number,
   isAtmospheric?: boolean,
   isCurtain?: boolean,
   isCurved?: boolean,
@@ -32,9 +32,10 @@ export default class WheelPicker extends React.Component<Props, State> {
   }
 
   static defaultProps = {
-    style: { height: 150, width: 200 },
-    itemStyle: { color: "white", fontSize: 26 },
+    isAtmospheric: true,
+    isCurved: true,
     itemSpace: 20,
+    style: { height: 150, width: 200 },
   }
 
   onItemSelected = (item: string | number) => {
