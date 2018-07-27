@@ -1,12 +1,5 @@
-'use strict';
+import { PickerIOS, Platform } from 'react-native';
 
-import React from 'react';
+import WheelPicker from './WheelPicker'
 
-import {
-	PickerIOS,
-	Platform,
-} from 'react-native';
-
-import WheelCurvedPicker from './WheelCurvedPicker'
-
-module.exports = (Platform.OS === 'ios' ? PickerIOS : WheelCurvedPicker)
+module.exports = (Platform.OS === 'ios' ? PickerIOS : WheelPicker)
