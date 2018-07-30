@@ -14,8 +14,8 @@ declare module "react-native-wheel-picker" {
   }
 
   export interface WheelPickerItemProps {
-    label?: string,
-    value?: string | number,
+    label: string,
+    value: number,
   }
 
   export class WheelPickerItem extends React.Component<WheelPickerItemProps> {}

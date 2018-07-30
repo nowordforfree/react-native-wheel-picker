@@ -1,19 +1,20 @@
 import React from 'react';
-import { View, requireNativeComponent } from 'react-native';
+import { DeviceEventEmitter, NativeModules, View, Text, requireNativeComponent } from 'react-native';
 
 const WheelPickerNative = requireNativeComponent('WheelPicker', WheelPicker);
 
 type Props = {
   onValueChange?: (arg: string | number) => void,
-  selectedItemPosition?: number,
+  selectedValue?: string | number,
   style?: View.props.style,
+  itemStyle?: Text.props.style
 }
 
 type State = { selectedItemPosition: number }
 
 type ItemProps = {
-  label?: string,
-  value?: string | number,
+  label: string,
+  value: number,
 }
 
 class WheelPickerItem extends React.Component<ItemProps> {
@@ -28,6 +29,8 @@ export default class WheelPicker extends React.Component<Props, State> {
     selectedItemPosition: 0,
   }
 
+  subscription = undefined
+
   static Item = WheelPickerItem
 
   constructor(props) {
@@ -35,37 +38,51 @@ export default class WheelPicker extends React.Component<Props, State> {
     this.state = this._stateFromProps(props)
   }
 
+  componentWillMount() {
+    this.subscription = DeviceEventEmitter.addListener('onItemSelected', this.onItemSelected)
+  }
+
+  componentWillUnmount() {
+    this.subscription.remove()
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    this.setState(this._stateFromProps(nextProps))
+  }
+
   _stateFromProps = (props) => {
     const selectedIndex = 0
     const data = []
-    const { children, onValueChange, style } = props
+    const { children, itemStyle, onValueChange, selectedValue, style } = props
 
     React.Children.forEach(children, (child, i) => {
-      if (child.props.value === props.selectedValue) {
+      if (child.props.value === selectedValue) {
         selectedIndex = i
       }
       data.push({ value: child.props.value, label: child.props.label })
     })
 
+    const { backgroundColor, ...styles } = style || {}
+    const { color, fontFamily, fontSize = 24 } = itemStyle
 
     return {
       curtainColor: undefined,
       data,
-      indicatorColor: style ? style.color : undefined,
+      indicatorColor: color,
       indicatorSize: undefined,
-      isAtmospheric = true,
-      isCurtain,
-      isCurved = true,
-      isCyclic = false,
-      itemSpace,
-      itemTextColor: style ? style.color : undefined,
-      itemTextFontFamily: style ? style.fontFamily : undefined,
-      itemTextSize: style ? style.fontSize : undefined,
-      onItemSelected: onValueChange,
+      isAtmospheric: true,
+      isCurtain: false,
+      isCurved: true,
+      isCyclic: false,
+      itemSpace: fontSize * 1.5,
+      itemTextColor: color,
+      itemTextFontFamily: fontFamily,
+      itemTextSize: fontSize,
       renderIndicator: true,
       selectedItemPosition: selectedIndex,
       selectedItemTextColor: undefined,
       visibleItemCount: undefined,
+      style: { ...styles, height: 80, width: 100 }
     }
   }
 
@@ -73,10 +90,6 @@ export default class WheelPicker extends React.Component<Props, State> {
     if (this.props.onValueChange) {
       this.props.onValueChange(item)
     }
-  }
-
-  componentWillReceiveProps(nextProps: Props) {
-    this.setState(this._stateFromProps(nextProps))
   }
 
   render() {
