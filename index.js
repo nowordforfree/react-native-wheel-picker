@@ -1,5 +1,5 @@
-import { PickerIOS, Platform } from 'react-native';
+'use strict';
 
-import WheelPicker from './WheelPicker'
+const RN =  require('react-native');
 
-module.exports = (Platform.OS === 'ios' ? PickerIOS : WheelPicker)
+module.exports = RN.Platform.OS === 'ios' ? RN.PickerIOS : require('./WheelPicker')

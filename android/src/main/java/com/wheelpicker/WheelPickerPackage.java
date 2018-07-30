@@ -15,6 +15,7 @@ public class WheelPickerPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
+        modules.add(new WheelPickerModule(reactContext));
         return modules;
     }
 

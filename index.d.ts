@@ -1,30 +1,27 @@
 declare module "react-native-wheel-picker" {
   import * as React from "react"
+  import { StyleProp, TextStyle, ViewStyle } from "react-native"
 
   export interface WheelPickerProps {
-    curtainColor?: string,
-    data: Array<string | number>,
-    indicatorColor?: string,
-    indicatorSize?: number,
-    isAtmospheric?: boolean,
-    isCurtain?: boolean,
-    isCurved?: boolean,
-    isCyclic?: boolean,
-    itemSpace?: number,
-    itemTextColor?: string,
-    itemTextFontFamily?: string,
-    itemTextSize?: number,
-    onItemSelected?: (arg: string | number) => void,
-    renderIndicator?: boolean,
-    selectedItemPosition?: number,
-    selectedItemTextColor?: string,
-    visibleItemCount?: number,
+    itemStyle?: StyleProp<TextStyle>,
+    onValueChange?: (arg: string | number) => void,
+    selectedValue?: string | number,
+    style?: StyleProp<ViewStyle>,
   }
 
   export type State = {
     selectedItemPosition: number
   }
 
-  export default class WheelPicker extends React.Component<WheelPickerProps, State> {}
+  export interface WheelPickerItemProps {
+    label: string,
+    value: number,
+  }
+
+  export class WheelPickerItem extends React.Component<WheelPickerItemProps> {}
+
+  export default class WheelPicker extends React.Component<WheelPickerProps, State> {
+    static Item: typeof WheelPickerItem
+  }
 
 }

@@ -1,29 +1,27 @@
 import React from 'react';
-import { requireNativeComponent } from 'react-native';
+import { DeviceEventEmitter, NativeModules, View, Text, requireNativeComponent } from 'react-native';
 
 const WheelPickerNative = requireNativeComponent('WheelPicker', WheelPicker);
 
 type Props = {
-  curtainColor?: string,
-  data: Array<string | number>,
-  indicatorColor?: string,
-  indicatorSize?: number,
-  isAtmospheric?: boolean,
-  isCurtain?: boolean,
-  isCurved?: boolean,
-  isCyclic?: boolean,
-  itemSpace?: number,
-  itemTextColor?: string,
-  itemTextFontFamily?: string,
-  itemTextSize?: number,
-  onItemSelected?: (arg: string | number) => void,
-  renderIndicator?: boolean,
-  selectedItemPosition?: number,
-  selectedItemTextColor?: string,
-  visibleItemCount?: number,
+  onValueChange?: (arg: string | number) => void,
+  selectedValue?: string | number,
+  style?: View.props.style,
+  itemStyle?: Text.props.style
 }
 
 type State = { selectedItemPosition: number }
+
+type ItemProps = {
+  label: string,
+  value: number,
+}
+
+class WheelPickerItem extends React.Component<ItemProps> {
+  render() {
+    return null
+  }
+}
 
 export default class WheelPicker extends React.Component<Props, State> {
 
@@ -31,35 +29,72 @@ export default class WheelPicker extends React.Component<Props, State> {
     selectedItemPosition: 0,
   }
 
-  static defaultProps = {
-    isAtmospheric: true,
-    isCurved: true,
-    itemSpace: 20,
-    style: { height: 150, width: 200 },
+  subscription = undefined
+
+  static Item = WheelPickerItem
+
+  constructor(props) {
+    super(props)
+    this.state = this._stateFromProps(props)
   }
 
-  onItemSelected = (item: string | number) => {
-    if (this.props.onItemSelected) {
-      this.props.onItemSelected(item)
-    }
+  componentWillMount() {
+    this.subscription = DeviceEventEmitter.addListener('onItemSelected', this.onItemSelected)
   }
 
-  componentDidMount() {
-    this.setState({ selectedItemPosition: this.props.selectedItemPosition || 0 })
+  componentWillUnmount() {
+    this.subscription.remove()
   }
 
   componentWillReceiveProps(nextProps: Props) {
-    this.setState({ selectedItemPosition: nextProps.selectedItemPosition || 0 })
+    this.setState(this._stateFromProps(nextProps))
+  }
+
+  _stateFromProps = (props) => {
+    const selectedIndex = 0
+    const data = []
+    const { children, itemStyle, onValueChange, selectedValue, style } = props
+
+    React.Children.forEach(children, (child, i) => {
+      if (child.props.value === selectedValue) {
+        selectedIndex = i
+      }
+      data.push({ value: child.props.value, label: child.props.label })
+    })
+
+    const { backgroundColor, ...styles } = style || {}
+    const { color, fontFamily, fontSize = 24 } = itemStyle
+
+    return {
+      curtainColor: undefined,
+      data,
+      indicatorColor: color,
+      indicatorSize: undefined,
+      isAtmospheric: true,
+      isCurtain: false,
+      isCurved: true,
+      isCyclic: false,
+      itemSpace: fontSize * 1.5,
+      itemTextColor: color,
+      itemTextFontFamily: fontFamily,
+      itemTextSize: fontSize,
+      renderIndicator: true,
+      selectedItemPosition: selectedIndex,
+      selectedItemTextColor: undefined,
+      visibleItemCount: undefined,
+      style: { ...styles, height: 80, width: 100 }
+    }
+  }
+
+  onItemSelected = (item: string | number) => {
+    if (this.props.onValueChange) {
+      this.props.onValueChange(item)
+    }
   }
 
   render() {
     return (
-      <WheelPickerNative
-        {...WheelPicker.defaultProps}
-        {...this.props}
-        onChange={this.onItemSelected}
-        selectedItemPosition={this.state.selectedItemPosition}
-      />
+      <WheelPickerNative {...this.state} />
     )
   }
 }
