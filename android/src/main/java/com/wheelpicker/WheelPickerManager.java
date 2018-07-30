@@ -1,25 +1,28 @@
 package com.wheelpicker;
 
+import android.support.annotation.Nullable;
+
 import com.aigestudio.wheelpicker.WheelPicker;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.facebook.react.views.text.ReactFontManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class WheelPickerManager extends SimpleViewManager<WheelPicker> implements WheelPicker.OnItemSelectedListener{
 
     public static final String REACT_CLASS = "WheelPicker";
-    private ReactContext rContext;
 
     @Override
     public String getName() {
@@ -30,7 +33,6 @@ public class WheelPickerManager extends SimpleViewManager<WheelPicker> implement
     protected WheelPicker createViewInstance(ThemedReactContext context) {
         WheelPicker wheelPicker = new WheelPicker(context);
         wheelPicker.setOnItemSelectedListener(this);
-        rContext = context;
         return wheelPicker;
     }
 
@@ -171,12 +173,6 @@ public class WheelPickerManager extends SimpleViewManager<WheelPicker> implement
         }
     }
 
-    private void sendEvent(String eventName, WritableMap params) {
-        rContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-            .emit(eventName, params);
-    }
-
     @Override
     public void onItemSelected(WheelPicker picker, Object data, int position) {
         WritableMap event = Arguments.createMap();
@@ -191,6 +187,21 @@ public class WheelPickerManager extends SimpleViewManager<WheelPicker> implement
             }
         }
         event.putInt("position", position);
-        sendEvent("onItemSelected", event);
+        ((ReactContext)picker.getContext())
+            .getJSModule(RCTEventEmitter.class)
+            .receiveEvent(
+                picker.getId(),
+                "itemSelected",
+                event
+            );
+    }
+
+    @Override
+    public @Nullable Map getExportedCustomDirectEventTypeConstants() {
+        return MapBuilder
+            .of(
+                "itemSelected",
+                MapBuilder.of("registrationName", "onItemSelected")
+            );
     }
 }

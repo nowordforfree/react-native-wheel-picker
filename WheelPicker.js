@@ -1,7 +1,7 @@
 import React from 'react';
-import { DeviceEventEmitter, NativeModules, View, Text } from 'react-native';
+import { View, Text, requireNativeComponent } from 'react-native';
 
-const WheelPickerNative = NativeModules.WheelPicker;
+const WheelPickerNative = requireNativeComponent('WheelPicker', WheelPicker);
 
 type Props = {
   onValueChange?: (arg: { data: string, position: number }) => void,
@@ -38,14 +38,6 @@ export default class WheelPicker extends React.Component<Props, State> {
     this.state = this._stateFromProps(props)
   }
 
-  componentWillMount() {
-    this.subscription = DeviceEventEmitter.addListener('onItemSelected', this.onItemSelected)
-  }
-
-  componentWillUnmount() {
-    this.subscription.remove()
-  }
-
   componentWillReceiveProps(nextProps: Props) {
     this.setState(this._stateFromProps(nextProps))
   }
@@ -69,7 +61,7 @@ export default class WheelPicker extends React.Component<Props, State> {
       curtainColor: undefined,
       data,
       indicatorColor: color,
-      indicatorSize: undefined,
+      indicatorSize: 3,
       isAtmospheric: true,
       isCurtain: false,
       isCurved: true,
@@ -81,20 +73,20 @@ export default class WheelPicker extends React.Component<Props, State> {
       renderIndicator: true,
       selectedItemPosition: selectedIndex,
       selectedItemTextColor: undefined,
+      style: { height: 80, width: 100, ...styles },
       visibleItemCount: undefined,
-      style: { ...styles, height: 80, width: 100 }
     }
   }
 
-  onItemSelected = (item) => {
+  onItemSelected = (e) => {
     if (this.props.onValueChange) {
-      this.props.onValueChange(item)
+      this.props.onValueChange(e)
     }
   }
 
   render() {
     return (
-      <WheelPickerNative {...this.state} />
+      <WheelPickerNative {...this.state} onItemSelected={this.onItemSelected} />
     )
   }
 }
