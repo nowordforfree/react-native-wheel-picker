@@ -4,8 +4,8 @@ declare module "react-native-wheel-picker" {
 
   export interface WheelPickerProps {
     itemStyle?: StyleProp<TextStyle>,
-    onValueChange?: (arg: string | number) => void,
-    selectedValue?: string | number,
+    onValueChange?: (arg: { data: string, position: number }) => void,
+    selectedValue?: string,
     style?: StyleProp<ViewStyle>,
   }
 
