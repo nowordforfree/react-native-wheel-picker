@@ -2,6 +2,8 @@ package com.wheelpicker;
 
 import android.support.annotation.Nullable;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import com.aigestudio.wheelpicker.WheelPicker;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
@@ -10,12 +12,11 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.annotations.ReactProp;
+import com.facebook.react.uimanager.events.RCTEventEmitter;
+import com.facebook.react.uimanager.PixelUtil;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.facebook.react.views.text.ReactFontManager;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -80,14 +81,14 @@ public class WheelPickerManager extends SimpleViewManager<WheelPicker> implement
     @ReactProp(name = "selectedItemTextColor")
     public void setSelectedItemTextColor(WheelPicker wheelPicker, String selectedItemTextColor) {
         if (wheelPicker != null){
-            wheelPicker.setSelectedItemTextColor(Color.parseColor(selectedItemTextColor));
+            wheelPicker.setSelectedItemTextColor(Color.parseColor(normalizeColor(selectedItemTextColor)));
         }
     }
 
     @ReactProp(name = "itemSpace")
     public void setItemSpace(WheelPicker wheelPicker, int itemSpace) {
         if (wheelPicker != null){
-            wheelPicker.setItemSpace(itemSpace);
+            wheelPicker.setItemSpace((int) PixelUtil.toPixelFromDIP(itemSpace));
         }
     }
 
@@ -108,7 +109,7 @@ public class WheelPickerManager extends SimpleViewManager<WheelPicker> implement
     @ReactProp(name = "indicatorColor")
     public void setIndicatorColor(WheelPicker wheelPicker, String indicatorColor) {
         if (wheelPicker != null){
-            wheelPicker.setIndicatorColor(Color.parseColor(indicatorColor));
+            wheelPicker.setIndicatorColor(Color.parseColor(normalizeColor(indicatorColor)));
         }
     }
 
@@ -129,21 +130,21 @@ public class WheelPickerManager extends SimpleViewManager<WheelPicker> implement
     @ReactProp(name = "curtainColor")
     public void setCurtainColor(WheelPicker wheelPicker, String curtainColor) {
         if (wheelPicker != null){
-            wheelPicker.setCurtainColor(Color.parseColor(curtainColor));
+            wheelPicker.setCurtainColor(Color.parseColor(normalizeColor(curtainColor)));
         }
     }
 
     @ReactProp(name = "itemTextColor")
     public void setItemTextColor(WheelPicker wheelPicker, String itemTextColor) {
         if (wheelPicker != null){
-            wheelPicker.setItemTextColor(Color.parseColor(itemTextColor));
+            wheelPicker.setItemTextColor(Color.parseColor(normalizeColor(itemTextColor)));
         }
     }
 
     @ReactProp(name = "itemTextSize")
     public void setItemTextSize(WheelPicker wheelPicker, int itemTextSize) {
         if (wheelPicker != null){
-            wheelPicker.setItemTextSize(itemTextSize);
+            wheelPicker.setItemTextSize((int) PixelUtil.toPixelFromDIP(itemTextSize));
         }
     }
 
@@ -169,7 +170,7 @@ public class WheelPickerManager extends SimpleViewManager<WheelPicker> implement
     @ReactProp(name = "backgroundColor")
     public void setBackgroundColor(WheelPicker wheelPicker, String backgroundColor) {
         if (wheelPicker != null){
-            wheelPicker.setBackgroundColor(Color.parseColor(backgroundColor));
+            wheelPicker.setBackgroundColor(Color.parseColor(normalizeColor(backgroundColor)));
         }
     }
 
@@ -198,5 +199,16 @@ public class WheelPickerManager extends SimpleViewManager<WheelPicker> implement
                 "itemSelected",
                 MapBuilder.of("registrationName", "onItemSelected")
             );
+    }
+
+    private String normalizeColor(String color) {
+        if (color.length() == 4 && color.charAt(0) == '#') {
+            String normalized = "#"
+                    + color.charAt(1) + color.charAt(1)
+                    + color.charAt(2) + color.charAt(2)
+                    + color.charAt(3) + color.charAt(3);
+            return normalized;
+        }
+        return color;
     }
 }
