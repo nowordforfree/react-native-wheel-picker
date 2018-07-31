@@ -45,7 +45,13 @@ export default class WheelPicker extends React.Component<Props, State> {
   _stateFromProps = (props) => {
     let selectedIndex = 0
     const data = []
-    const { children, itemStyle, onValueChange, selectedValue, style } = props
+    const {
+      children,
+      itemStyle = {},
+      onValueChange,
+      selectedValue,
+      style = {},
+    } = props
 
     React.Children.forEach(children, (child, i) => {
       if (child.props.value === selectedValue) {
@@ -54,7 +60,7 @@ export default class WheelPicker extends React.Component<Props, State> {
       data.push({ value: child.props.value, label: child.props.label })
     })
 
-    const { backgroundColor, ...styles } = style || {}
+    const { backgroundColor, ...styles } = style
     const { color, fontFamily, fontSize = 24 } = itemStyle
 
     return {
