@@ -4,7 +4,7 @@ import { View, Text, requireNativeComponent } from 'react-native';
 const WheelPickerNative = requireNativeComponent('WheelPicker', WheelPicker);
 
 type Props = {
-  onValueChange?: (arg: { data: string, position: number }) => void,
+  onValueChange?: (arg: string | number) => void,
   selectedValue?: string | number,
   style?: View.props.style,
   itemStyle?: Text.props.style
@@ -86,7 +86,7 @@ export default class WheelPicker extends React.Component<Props, State> {
 
   onItemSelected = (e) => {
     if (this.props.onValueChange) {
-      this.props.onValueChange(e)
+      this.props.onValueChange(e.nativeEvent.data)
     }
   }
 

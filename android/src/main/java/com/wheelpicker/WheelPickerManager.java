@@ -182,7 +182,6 @@ public class WheelPickerManager extends SimpleViewManager<WheelPicker> implement
         } catch (Exception e) {
             e.printStackTrace();
         }
-        event.putInt("position", position);
         ((ReactContext)picker.getContext())
             .getJSModule(RCTEventEmitter.class)
             .receiveEvent(
