@@ -9,11 +9,6 @@ declare module "react-native-wheel-picker" {
     style?: StyleProp<ViewStyle>,
   }
 
-  export interface WheelPickerValueChanged {
-    data: string;
-    position: number;
-  }
-
   export type State = {
     selectedItemPosition: number
   }
