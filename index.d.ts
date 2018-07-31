@@ -1,12 +1,17 @@
 declare module "react-native-wheel-picker" {
   import * as React from "react"
-  import { StyleProp, TextStyle, ViewStyle } from "react-native"
+  import { StyleProp, NativeSyntheticEvent, TextStyle, ViewStyle } from "react-native"
 
   export interface WheelPickerProps {
     itemStyle?: StyleProp<TextStyle>,
-    onValueChange?: (arg: { data: string, position: number }) => void,
+    onValueChange?: (arg: NativeSyntheticEvent<WheelPickerValueChanged>) => void,
     selectedValue?: string,
     style?: StyleProp<ViewStyle>,
+  }
+
+  export interface WheelPickerValueChanged {
+    data: string;
+    position: number;
   }
 
   export type State = {
