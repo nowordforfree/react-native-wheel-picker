@@ -43,7 +43,7 @@ export default class WheelPicker extends React.Component<Props, State> {
   }
 
   _stateFromProps = (props) => {
-    const selectedIndex = 0
+    let selectedIndex = 0
     const data = []
     const { children, itemStyle, onValueChange, selectedValue, style } = props
 
