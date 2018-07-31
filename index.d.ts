@@ -5,7 +5,7 @@ declare module "react-native-wheel-picker" {
   export interface WheelPickerProps {
     itemStyle?: StyleProp<TextStyle>,
     onValueChange?: (arg: NativeSyntheticEvent<WheelPickerValueChanged>) => void,
-    selectedValue?: string,
+    selectedValue?: string | number,
     style?: StyleProp<ViewStyle>,
   }
 
@@ -20,7 +20,7 @@ declare module "react-native-wheel-picker" {
 
   export interface WheelPickerItemProps {
     label: string,
-    value: number,
+    value: string | number,
   }
 
   export class WheelPickerItem extends React.Component<WheelPickerItemProps> {}

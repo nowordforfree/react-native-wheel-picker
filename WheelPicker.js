@@ -14,7 +14,7 @@ type State = { selectedItemPosition: number }
 
 type ItemProps = {
   label: string,
-  value: number,
+  value: string | number,
 }
 
 class WheelPickerItem extends React.Component<ItemProps> {
